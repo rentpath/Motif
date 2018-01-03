@@ -1,5 +1,6 @@
 package com.rentpath.motif;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -9,8 +10,6 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
-import com.rentpath.motif.R;
 
 import java.util.Collections;
 import java.util.HashMap;

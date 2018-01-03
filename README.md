@@ -59,8 +59,8 @@ dependencies {
 }
 ```
 
-# Note
-
+Note
+-------
 This library was created because it is currently not possible to dynamically change themes in Android.
 
 License
