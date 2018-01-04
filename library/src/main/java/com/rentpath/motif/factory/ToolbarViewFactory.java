@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 class ToolbarViewFactory extends ViewFactory<Toolbar> {
 
     @Override
-    void onViewCreated(MotifFactory motifFactory, Context context, Toolbar view, AttributeSet attrs) {
+    public void onViewCreated(MotifFactory motifFactory, Context context, Toolbar view, AttributeSet attrs) {
 
     }
 }

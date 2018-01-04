@@ -62,7 +62,7 @@ public class MotifFactory implements ViewGroup.OnHierarchyChangeListener {
         }
         return view;
     }
-    
+
     private void onViewCreatedInternal(View view, final Context context, AttributeSet attrs) {
         if (view instanceof CheckBox) {
             ((CheckBoxFactory) FACTORIES.get(CheckBox.class)).onViewCreated(this, context, (CheckBox) view, attrs);
