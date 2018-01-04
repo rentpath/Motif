@@ -13,8 +13,6 @@ public class MotifContextWrapper extends ContextWrapper {
 
     private MotifLayoutInflater mInflater;
 
-    private final int mAttributeId;
-
     /**
      * Uses the default configuration from {@link MotifConfig}
      *
@@ -81,32 +79,13 @@ public class MotifContextWrapper extends ContextWrapper {
      */
     MotifContextWrapper(Context base) {
         super(base);
-        mAttributeId = MotifConfig.get().getAttrId();
-    }
-
-    /**
-     * Override the default AttributeId, this will always take the custom attribute defined here
-     * and ignore the one set in {@link MotifConfig}.
-     *
-     * Remember if you are defining default in the
-     * {@link MotifConfig} make sure this is initialised before
-     * the activity is created.
-     *
-     * @param base        ContextBase to Wrap
-     * @param attributeId Attribute to lookup.
-     * @deprecated use {@link #wrap(android.content.Context)}
-     */
-    @Deprecated
-    public MotifContextWrapper(Context base, int attributeId) {
-        super(base);
-        mAttributeId = attributeId;
     }
 
     @Override
     public Object getSystemService(String name) {
         if (LAYOUT_INFLATER_SERVICE.equals(name)) {
             if (mInflater == null) {
-                mInflater = new MotifLayoutInflater(LayoutInflater.from(getBaseContext()), this, mAttributeId, false);
+                mInflater = new MotifLayoutInflater(LayoutInflater.from(getBaseContext()), this, false);
             }
             return mInflater;
         }

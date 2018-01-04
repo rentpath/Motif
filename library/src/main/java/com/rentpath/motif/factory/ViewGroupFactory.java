@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 class ViewGroupFactory extends ViewFactory<ViewGroup> {
 
     @Override
-    void onViewCreated(MotifFactory motifFactory, Context context, ViewGroup view, AttributeSet attrs, int[] attributeId) {
+    void onViewCreated(MotifFactory motifFactory, Context context, ViewGroup view, AttributeSet attrs) {
 
     }
 }

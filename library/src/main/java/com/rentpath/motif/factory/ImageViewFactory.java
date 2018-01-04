@@ -7,7 +7,7 @@ import android.widget.ImageView;
 class ImageViewFactory extends ViewFactory<ImageView> {
 
     @Override
-    void onViewCreated(MotifFactory motifFactory, Context context, ImageView view, AttributeSet attrs, int[] attributeId) {
+    void onViewCreated(MotifFactory motifFactory, Context context, ImageView view, AttributeSet attrs) {
 
     }
 }

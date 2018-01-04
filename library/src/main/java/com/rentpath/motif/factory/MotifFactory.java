@@ -36,11 +36,7 @@ public class MotifFactory {
         FACTORIES.put(ViewGroup.class, new ViewGroupFactory());
     }
 
-    private final int[] mAttributeId;
-    private CustomViewFactory mCustomViewFactory = new CustomViewFactory();
-
-    public MotifFactory(int attributeId) {
-        this.mAttributeId = new int[]{attributeId};
+    public MotifFactory() {
     }
 
     /**
@@ -62,11 +58,6 @@ public class MotifFactory {
 
     private void onViewCreatedInternal(View view, final Context context, AttributeSet attrs) {
 
-        // first check if this view is a custom view defined in our config
-        if (getConfig().isCustomViewTypefaceSupport() && getConfig().isCustomViewHasTypeface(view)) {
-            mCustomViewFactory.onViewCreated(this, context, view, attrs, mAttributeId);
-        }
-
         ViewFactory viewFactory;
         try {
             viewFactory = FACTORIES.get(view.getClass());
@@ -76,31 +67,31 @@ public class MotifFactory {
         }
 
         if (view instanceof Button && viewFactory instanceof ButtonFactory) {
-            ((ButtonFactory) viewFactory).onViewCreated(this, context, (Button) view, attrs, mAttributeId);
+            ((ButtonFactory) viewFactory).onViewCreated(this, context, (Button) view, attrs);
         }
 
         if (view instanceof CheckBox && viewFactory instanceof CheckBoxFactory) {
-            ((CheckBoxFactory) viewFactory).onViewCreated(this, context, (CheckBox) view, attrs, mAttributeId);
+            ((CheckBoxFactory) viewFactory).onViewCreated(this, context, (CheckBox) view, attrs);
         }
 
         if (view instanceof ImageButton && viewFactory instanceof ImageButtonFactory) {
-            ((ImageButtonFactory) viewFactory).onViewCreated(this, context, (ImageButton) view, attrs, mAttributeId);
+            ((ImageButtonFactory) viewFactory).onViewCreated(this, context, (ImageButton) view, attrs);
         }
 
         if (view instanceof ImageView && viewFactory instanceof ImageViewFactory) {
-            ((ImageViewFactory) viewFactory).onViewCreated(this, context, (ImageView) view, attrs, mAttributeId);
+            ((ImageViewFactory) viewFactory).onViewCreated(this, context, (ImageView) view, attrs);
         }
 
         if (view instanceof RadioButton && viewFactory instanceof RadioButtonFactory) {
-            ((RadioButtonFactory) viewFactory).onViewCreated(this, context, (RadioButton) view, attrs, mAttributeId);
+            ((RadioButtonFactory) viewFactory).onViewCreated(this, context, (RadioButton) view, attrs);
         }
 
         if (view instanceof TextView && viewFactory instanceof TextViewFactory) {
-            ((TextViewFactory) viewFactory).onViewCreated(this, context, (TextView) view, attrs, mAttributeId);
+            ((TextViewFactory) viewFactory).onViewCreated(this, context, (TextView) view, attrs);
         }
 
         if (view instanceof ViewGroup && viewFactory instanceof ViewGroupFactory) {
-            ((ViewGroupFactory) viewFactory).onViewCreated(this, context, (ViewGroup) view, attrs, mAttributeId);
+            ((ViewGroupFactory) viewFactory).onViewCreated(this, context, (ViewGroup) view, attrs);
         }
     }
 

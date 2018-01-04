@@ -22,29 +22,26 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
             "android.webkit."
     };
 
-    private final int mAttributeId;
     private final MotifFactory mMotifFactory;
     // Reflection Hax
     private boolean mSetPrivateFactory = false;
     private Field mConstructorArgs = null;
 
-    protected MotifLayoutInflater(Context context, int attributeId) {
+    protected MotifLayoutInflater(Context context) {
         super(context);
-        mAttributeId = attributeId;
-        mMotifFactory = new MotifFactory(attributeId);
+        mMotifFactory = new MotifFactory();
         setUpLayoutFactories(false);
     }
 
-    protected MotifLayoutInflater(LayoutInflater original, Context newContext, int attributeId, final boolean cloned) {
+    protected MotifLayoutInflater(LayoutInflater original, Context newContext, final boolean cloned) {
         super(original, newContext);
-        mAttributeId = attributeId;
-        mMotifFactory = new MotifFactory(attributeId);
+        mMotifFactory = new MotifFactory();
         setUpLayoutFactories(cloned);
     }
 
     @Override
     public LayoutInflater cloneInContext(Context newContext) {
-        return new MotifLayoutInflater(this, newContext, mAttributeId, true);
+        return new MotifLayoutInflater(this, newContext, true);
     }
 
     // ===

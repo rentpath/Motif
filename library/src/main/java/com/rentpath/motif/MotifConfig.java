@@ -1,7 +1,5 @@
 package com.rentpath.motif;
 
-import android.text.TextUtils;
-import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,13 +13,7 @@ import com.rentpath.motif.utils.MotifUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-
-/**
- * Created by Franks on 1/3/18.
- */
 
 public class MotifConfig {
 
@@ -65,7 +57,7 @@ public class MotifConfig {
     private static MotifConfig sInstance;
 
     /**
-     * Set the default Motif Config
+     * Set the default Calligraphy Config
      *
      * @param motifConfig the config build using the builder.
      * @see MotifConfig.Builder
@@ -75,7 +67,7 @@ public class MotifConfig {
     }
 
     /**
-     * The current Motif Config.
+     * The current Calligraphy Config.
      * If not set it will create a default config.
      */
     public static MotifConfig get() {
@@ -97,18 +89,6 @@ public class MotifConfig {
      */
     private final String mColorAccent;
     /**
-     * Is a default font set?
-     */
-    private final boolean mIsFontSet;
-    /**
-     * The default Font Path if nothing else is setup.
-     */
-    private final String mFontPath;
-    /**
-     * Default Font Path Attr Id to lookup
-     */
-    private final int mAttrId;
-    /**
      * Use Reflection to inject the private factory.
      */
     private final boolean mReflection;
@@ -117,47 +97,19 @@ public class MotifConfig {
      */
     private final boolean mCustomViewCreation;
     /**
-     * Use Reflection to try to set typeface for custom views if they has setTypeface method
-     */
-    private final boolean mCustomViewTypefaceSupport;
-    /**
      * Class Styles. Build from DEFAULT_STYLES and the builder.
      */
     private final Map<Class<? extends TextView>, Integer> mClassStyleAttributeMap;
-    /**
-     * Collection of custom non-{@code TextView}'s registered for applying typeface during inflation
-     * @see MotifConfig.Builder#addCustomViewWithSetTypeface(Class)
-     */
-    private final Set<Class<?>> hasTypefaceViews;
 
     protected MotifConfig(Builder builder) {
         mColorPrimary = builder.colorPrimary;
         mColorPrimaryDark = builder.colorPrimaryDark;
         mColorAccent = builder.colorAccent;
-        mIsFontSet = builder.isFontSet;
-        mFontPath = builder.fontAssetPath;
-        mAttrId = builder.attrId;
         mReflection = builder.reflection;
         mCustomViewCreation = builder.customViewCreation;
-        mCustomViewTypefaceSupport = builder.customViewTypefaceSupport;
         final Map<Class<? extends TextView>, Integer> tempMap = new HashMap<>(DEFAULT_STYLES);
         tempMap.putAll(builder.mStyleClassMap);
         mClassStyleAttributeMap = Collections.unmodifiableMap(tempMap);
-        hasTypefaceViews = Collections.unmodifiableSet(builder.mHasTypefaceClasses);
-    }
-
-    /**
-     * @return mFontPath for text views might be null
-     */
-    public String getFontPath() {
-        return mFontPath;
-    }
-
-    /**
-     * @return true if set, false if null|empty
-     */
-    public boolean isFontSet() {
-        return mIsFontSet;
     }
 
     public boolean isReflection() {
@@ -168,23 +120,8 @@ public class MotifConfig {
         return mCustomViewCreation;
     }
 
-    public boolean isCustomViewTypefaceSupport() {
-        return mCustomViewTypefaceSupport;
-    }
-
-    public boolean isCustomViewHasTypeface(View view) {
-        return hasTypefaceViews.contains(view.getClass());
-    }
-
     public Map<Class<? extends TextView>, Integer> getClassStyles() {
         return mClassStyleAttributeMap;
-    }
-
-    /**
-     * @return the custom attrId to look for, -1 if not set.
-     */
-    public int getAttrId() {
-        return mAttrId;
     }
 
     public static class Builder {
@@ -213,27 +150,9 @@ public class MotifConfig {
          */
         private boolean customViewCreation = true;
         /**
-         * Use Reflection during view creation to try change typeface via setTypeface method if it exists
-         */
-        private boolean customViewTypefaceSupport = false;
-        /**
-         * The fontAttrId to look up the font path from.
-         */
-        private int attrId = R.attr.fontPath;
-        /**
-         * Has the user set the default font path.
-         */
-        private boolean isFontSet = false;
-        /**
-         * The default fontPath
-         */
-        private String fontAssetPath = null;
-        /**
          * Additional Class Styles. Can be empty.
          */
         private Map<Class<? extends TextView>, Integer> mStyleClassMap = new HashMap<>();
-
-        private Set<Class<?>> mHasTypefaceClasses = new HashSet<>();
 
         /**
          * Set the default primary color to be used app wide
@@ -269,30 +188,6 @@ public class MotifConfig {
         }
 
         /**
-         * This defaults to R.attr.fontPath. So only override if you want to use your own attrId.
-         *
-         * @param fontAssetAttrId the custom attribute to look for fonts in assets.
-         * @return this builder.
-         */
-        public Builder setFontAttrId(int fontAssetAttrId) {
-            this.attrId = fontAssetAttrId;
-            return this;
-        }
-
-        /**
-         * Set the default font if you don't define one else where in your styles.
-         *
-         * @param defaultFontAssetPath a path to a font file in the assets folder, e.g. "fonts/Roboto-light.ttf",
-         *                             passing null will default to the device font-family.
-         * @return this builder.
-         */
-        public Builder setDefaultFontPath(String defaultFontAssetPath) {
-            this.isFontSet = !TextUtils.isEmpty(defaultFontAssetPath);
-            this.fontAssetPath = defaultFontAssetPath;
-            return this;
-        }
-
-        /**
          * <p>Turn of the use of Reflection to inject the private factory.
          * This has operational consequences! Please read and understand before disabling.
          * <b>This is already disabled on pre Honeycomb devices. (API 11)</b></p>
@@ -305,7 +200,7 @@ public class MotifConfig {
          * {@literal @}Override
          * {@literal @}TargetApi(Build.VERSION_CODES.HONEYCOMB)
          * public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-         *   return MotifContextWrapper.onActivityCreateView(this, parent, super.onCreateView(parent, name, context, attrs), name, context, attrs);
+         *   return CalligraphyContextWrapper.onActivityCreateView(this, parent, super.onCreateView(parent, name, context, attrs), name, context, attrs);
          * }
          * </code></pre>
          */
@@ -334,7 +229,7 @@ public class MotifConfig {
          * (Without having to do proxy classes etc).
          *
          * Calling this will of course speed up inflation by turning off reflection, but not by much,
-         * But if you want Motif to inject the correct typeface then you will need to make sure your CustomView's
+         * But if you want Calligraphy to inject the correct typeface then you will need to make sure your CustomView's
          * are created before reaching the LayoutInflater onViewCreated.
          */
         public Builder disableCustomViewInflation() {
@@ -346,7 +241,7 @@ public class MotifConfig {
          * Add a custom style to get looked up. If you use a custom class that has a parent style
          * which is not part of the default android styles you will need to add it here.
          *
-         * The Motif inflater is unaware of custom styles in your custom classes. We use
+         * The Calligraphy inflater is unaware of custom styles in your custom classes. We use
          * the class type to look up the style attribute in the theme resources.
          *
          * So if you had a {@code MyTextField.class} which looked up it's default style as
@@ -364,17 +259,7 @@ public class MotifConfig {
             return this;
         }
 
-        /**
-         * Register custom non-{@code TextView}'s which implement {@code setTypeface} so they can have the Typeface applied during inflation.
-         */
-        public Builder addCustomViewWithSetTypeface(Class<?> clazz) {
-            customViewTypefaceSupport = true;
-            mHasTypefaceClasses.add(clazz);
-            return this;
-        }
-
         public MotifConfig build() {
-            this.isFontSet = !TextUtils.isEmpty(fontAssetPath);
             return new MotifConfig(this);
         }
     }
