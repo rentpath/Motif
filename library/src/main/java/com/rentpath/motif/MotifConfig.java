@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.rentpath.motif.factory.ViewFactory;
 import com.rentpath.motif.utils.MotifUtils;
 
 import java.util.Collections;
@@ -97,6 +98,10 @@ public class MotifConfig {
      */
     private int mColorControlHighlight;
     /**
+     * The custom view factory to handle view theme customization
+     */
+    private ViewFactory<View> mViewFactory;
+    /**
      * Use Reflection to inject the private factory.
      */
     private final boolean mReflection;
@@ -114,6 +119,7 @@ public class MotifConfig {
         mColorPrimaryDark = builder.colorPrimaryDark;
         mColorAccent = builder.colorAccent;
         mColorControlHighlight = builder.colorControlHighlight;
+        mViewFactory = builder.viewFactory;
         mReflection = builder.reflection;
         mCustomViewCreation = builder.customViewCreation;
         final Map<Class<? extends View>, Integer> tempMap = new HashMap<>(DEFAULT_STYLES);
@@ -153,6 +159,14 @@ public class MotifConfig {
         this.mColorControlHighlight = colorControlHighlight;
     }
 
+    public ViewFactory<View> getViewFactory() {
+        return mViewFactory;
+    }
+
+    public void setViewFactory(ViewFactory<View> viewFactory) {
+        this.mViewFactory = viewFactory;
+    }
+
     public boolean isReflection() {
         return mReflection;
     }
@@ -186,6 +200,10 @@ public class MotifConfig {
          *
          */
         private int colorControlHighlight = INVALID_ATTR_ID;
+        /**'
+         *
+         */
+        private ViewFactory<View> viewFactory;
         /**
          * Use Reflection to inject the private factory. Doesn't exist pre HC. so defaults to false.
          */
@@ -288,6 +306,17 @@ public class MotifConfig {
          */
         public Builder setColorControlHighlight(Context context, int colorControlHighlightResId) {
             this.colorControlHighlight = ContextCompat.getColor(context, colorControlHighlightResId);
+            return this;
+        }
+
+        /**
+         * Define your own custom view factory to replace the internal factories. Doing so will prevent any internal customization.
+         *
+         * @param viewFactory the view factory to be used when inflating views.
+         * @return this builder
+         */
+        public Builder setViewFactory(ViewFactory<View> viewFactory) {
+            this.viewFactory = viewFactory;
             return this;
         }
 

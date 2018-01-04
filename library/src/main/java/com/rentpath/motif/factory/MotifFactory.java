@@ -43,21 +43,26 @@ public class MotifFactory implements ViewGroup.OnHierarchyChangeListener {
 
     /**
      * Handle the created view
+     * If the config has a view factory, we will use this to handle view creation. Our internal
+     * code will not be executed if this view factory exists
      *
      * @param view    nullable.
      * @param context shouldn't be null.
      * @param attrs   shouldn't be null.
      * @return null if null is passed in.
      */
-
     public View onViewCreated(View view, Context context, AttributeSet attrs) {
         if (view != null && view.getTag(R.id.motif_tag_id) != Boolean.TRUE) {
-            onViewCreatedInternal(view, context, attrs);
+            if (getConfig().getViewFactory() != null) {
+                getConfig().getViewFactory().onViewCreated(this, context, view, attrs);
+            } else {
+                onViewCreatedInternal(view, context, attrs);
+            }
             view.setTag(R.id.motif_tag_id, Boolean.TRUE);
         }
         return view;
     }
-
+    
     private void onViewCreatedInternal(View view, final Context context, AttributeSet attrs) {
         if (view instanceof CheckBox) {
             ((CheckBoxFactory) FACTORIES.get(CheckBox.class)).onViewCreated(this, context, (CheckBox) view, attrs);
@@ -77,7 +82,7 @@ public class MotifFactory implements ViewGroup.OnHierarchyChangeListener {
             // add our hierarchy listener to detect view additions and apply themes
             ((ViewGroup) view).setOnHierarchyChangeListener(this);
         } else {
-            logViewClassError(view.getClass());
+            Log.e(TAG, "Unable to apply theme to view of type " + view.getClass());
         }
     }
 
@@ -96,7 +101,7 @@ public class MotifFactory implements ViewGroup.OnHierarchyChangeListener {
                 onChildViewAdded(child, nestedChild);
             }
         } else {
-            onViewCreatedInternal(child, parent.getContext(), null);
+            onViewCreated(child, parent.getContext(), null);
         }
     }
 
@@ -108,10 +113,6 @@ public class MotifFactory implements ViewGroup.OnHierarchyChangeListener {
      */
     @Override
     public void onChildViewRemoved(View parent, View child) {
-    }
-
-    private void logViewClassError(Class clazz) {
-        Log.e(TAG, "Unable to apply theme to view of type " + clazz);
     }
 
     private List<View> getChildrenFromViewGroup(ViewGroup viewGroup) {
