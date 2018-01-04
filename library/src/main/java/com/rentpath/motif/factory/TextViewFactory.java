@@ -1,9 +1,13 @@
-package com.rentpath.motif;
+package com.rentpath.motif.factory;
 
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import com.rentpath.motif.MotifConfig;
+import com.rentpath.motif.utils.MotifUtils;
+import com.rentpath.motif.utils.TypefaceUtils;
 
 class TextViewFactory extends ViewFactory<TextView> {
 

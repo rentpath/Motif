@@ -1,6 +1,8 @@
-package com.rentpath.motif;
+package com.rentpath.motif.utils;
 
 import android.graphics.Typeface;
+
+import com.rentpath.motif.MotifConfig;
 
 /**
  * There are two ways to set typeface for custom views:

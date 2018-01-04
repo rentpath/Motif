@@ -6,6 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.rentpath.motif.factory.MotifActivityFactory;
+import com.rentpath.motif.factory.MotifFactory;
+import com.rentpath.motif.utils.ReflectionUtils;
+
 import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Field;

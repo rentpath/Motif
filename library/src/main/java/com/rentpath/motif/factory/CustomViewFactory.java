@@ -1,9 +1,11 @@
-package com.rentpath.motif;
+package com.rentpath.motif.factory;
 
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.rentpath.motif.utils.ReflectionUtils;
 
 import java.lang.reflect.Method;
 

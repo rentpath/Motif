@@ -1,10 +1,10 @@
-package com.rentpath.motif;
+package com.rentpath.motif.factory;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-interface MotifActivityFactory {
+public interface MotifActivityFactory {
 
     /**
      * Used to Wrap the Activity onCreateView method.

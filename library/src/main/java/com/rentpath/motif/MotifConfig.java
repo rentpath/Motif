@@ -11,6 +11,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.rentpath.motif.utils.MotifUtils;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,6 +85,18 @@ public class MotifConfig {
     }
 
     /**
+     * The default primary color
+     */
+    private final String mColorPrimary;
+    /**
+     * The default primary dark color
+     */
+    private final String mColorPrimaryDark;
+    /**
+     * The default accent color
+     */
+    private final String mColorAccent;
+    /**
      * Is a default font set?
      */
     private final boolean mIsFontSet;
@@ -117,6 +131,9 @@ public class MotifConfig {
     private final Set<Class<?>> hasTypefaceViews;
 
     protected MotifConfig(Builder builder) {
+        mColorPrimary = builder.colorPrimary;
+        mColorPrimaryDark = builder.colorPrimaryDark;
+        mColorAccent = builder.colorAccent;
         mIsFontSet = builder.isFontSet;
         mFontPath = builder.fontAssetPath;
         mAttrId = builder.attrId;
@@ -139,7 +156,7 @@ public class MotifConfig {
     /**
      * @return true if set, false if null|empty
      */
-    boolean isFontSet() {
+    public boolean isFontSet() {
         return mIsFontSet;
     }
 
@@ -159,7 +176,7 @@ public class MotifConfig {
         return hasTypefaceViews.contains(view.getClass());
     }
 
-    /* default */ Map<Class<? extends TextView>, Integer> getClassStyles() {
+    public Map<Class<? extends TextView>, Integer> getClassStyles() {
         return mClassStyleAttributeMap;
     }
 
@@ -175,6 +192,18 @@ public class MotifConfig {
          * Default AttrID if not set.
          */
         public static final int INVALID_ATTR_ID = -1;
+        /**
+         *
+         */
+        private String colorPrimary;
+        /**
+         *
+         */
+        private String colorPrimaryDark;
+        /**
+         *
+         */
+        private String colorAccent;
         /**
          * Use Reflection to inject the private factory. Doesn't exist pre HC. so defaults to false.
          */
@@ -205,6 +234,39 @@ public class MotifConfig {
         private Map<Class<? extends TextView>, Integer> mStyleClassMap = new HashMap<>();
 
         private Set<Class<?>> mHasTypefaceClasses = new HashSet<>();
+
+        /**
+         * Set the default primary color to be used app wide
+         *
+         * @param colorPrimary the hex code for the primary color
+         * @return this builder.
+         */
+        public Builder setColorPrimary(String colorPrimary) {
+            this.colorPrimary = colorPrimary;
+            return this;
+        }
+
+        /**
+         * Set the default primary dark color to be used app wide
+         *
+         * @param colorPrimaryDark the hex code for the primary dark color
+         * @return this builder.
+         */
+        public Builder setColorPrimaryDark(String colorPrimaryDark) {
+            this.colorPrimaryDark = colorPrimaryDark;
+            return this;
+        }
+
+        /**
+         * Set the default accent color to be used app wide
+         *
+         * @param colorAccent the hex code for the accent color
+         * @return this builder.
+         */
+        public Builder setColorAccent(String colorAccent) {
+            this.colorAccent = colorAccent;
+            return this;
+        }
 
         /**
          * This defaults to R.attr.fontPath. So only override if you want to use your own attrId.

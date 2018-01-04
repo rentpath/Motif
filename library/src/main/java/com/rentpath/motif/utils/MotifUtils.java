@@ -1,4 +1,4 @@
-package com.rentpath.motif;
+package com.rentpath.motif.utils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -15,6 +15,8 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
+
+import com.rentpath.motif.MotifConfig;
 
 public class MotifUtils {
 
@@ -104,18 +106,18 @@ public class MotifUtils {
         return applyFontToTextView(context, textView, filePath, false);
     }
 
-    static boolean applyFontToTextView(final Context context, final TextView textView, final String filePath, boolean deferred) {
+    public static boolean applyFontToTextView(final Context context, final TextView textView, final String filePath, boolean deferred) {
         if (textView == null || context == null) return false;
         final AssetManager assetManager = context.getAssets();
         final Typeface typeface = TypefaceUtils.load(assetManager, filePath);
         return applyFontToTextView(textView, typeface, deferred);
     }
 
-    static void applyFontToTextView(final Context context, final TextView textView, final MotifConfig config) {
+    public static void applyFontToTextView(final Context context, final TextView textView, final MotifConfig config) {
         applyFontToTextView(context, textView, config, false);
     }
 
-    static void applyFontToTextView(final Context context, final TextView textView, final MotifConfig config, boolean deferred) {
+    public static void applyFontToTextView(final Context context, final TextView textView, final MotifConfig config, boolean deferred) {
         if (context == null || textView == null || config == null) return;
         if (!config.isFontSet()) return;
         applyFontToTextView(context, textView, config.getFontPath(), deferred);
@@ -134,7 +136,7 @@ public class MotifUtils {
         applyFontToTextView(context, textView, config, textViewFont, false);
     }
 
-    static void applyFontToTextView(final Context context, final TextView textView, final MotifConfig config, final String textViewFont, boolean deferred) {
+    public static void applyFontToTextView(final Context context, final TextView textView, final MotifConfig config, final String textViewFont, boolean deferred) {
         if (context == null || textView == null || config == null) return;
         if (!TextUtils.isEmpty(textViewFont) && applyFontToTextView(context, textView, textViewFont, deferred)) {
             return;
@@ -150,7 +152,7 @@ public class MotifUtils {
      * @param attributeId if -1 returns null.
      * @return null if attribute is not defined or added to View
      */
-    static String pullFontPathFromView(Context context, AttributeSet attrs, int[] attributeId) {
+    public static String pullFontPathFromView(Context context, AttributeSet attrs, int[] attributeId) {
         if (attributeId == null || attrs == null)
             return null;
 
@@ -177,7 +179,7 @@ public class MotifUtils {
      * @param attributeId if -1 returns null.
      * @return null if attribute is not defined or found in the Style
      */
-    static String pullFontPathFromStyle(Context context, AttributeSet attrs, int[] attributeId) {
+    public static String pullFontPathFromStyle(Context context, AttributeSet attrs, int[] attributeId) {
         if (attributeId == null || attrs == null)
             return null;
         final TypedArray typedArray = context.obtainStyledAttributes(attrs, attributeId);
@@ -205,7 +207,7 @@ public class MotifUtils {
      * @param attributeId if -1 returns null.
      * @return returns null if attribute is not defined or if no TextAppearance is found.
      */
-    static String pullFontPathFromTextAppearance(final Context context, AttributeSet attrs, int[] attributeId) {
+    public static String pullFontPathFromTextAppearance(final Context context, AttributeSet attrs, int[] attributeId) {
         if (attributeId == null || attrs == null) {
             return null;
         }
@@ -245,7 +247,7 @@ public class MotifUtils {
      * @param attributeId if -1 returns null.
      * @return null if no theme or attribute defined.
      */
-    static String pullFontPathFromTheme(Context context, int styleAttrId, int[] attributeId) {
+    public static String pullFontPathFromTheme(Context context, int styleAttrId, int[] attributeId) {
         if (styleAttrId == -1 || attributeId == null)
             return null;
 
@@ -274,7 +276,7 @@ public class MotifUtils {
      * @param attributeId    if -1 returns null.
      * @return null if no theme or attribute defined.
      */
-    static String pullFontPathFromTheme(Context context, int styleAttrId, int subStyleAttrId, int[] attributeId) {
+    public static String pullFontPathFromTheme(Context context, int styleAttrId, int subStyleAttrId, int[] attributeId) {
         if (styleAttrId == -1 || attributeId == null)
             return null;
 
@@ -316,7 +318,7 @@ public class MotifUtils {
      *
      * @return true if the v7.Toolbar is on the classpath
      */
-    static boolean canCheckForV7Toolbar() {
+    public static boolean canCheckForV7Toolbar() {
         if (sToolbarCheck == null) {
             try {
                 Class.forName("android.support.v7.widget.Toolbar");
@@ -333,7 +335,7 @@ public class MotifUtils {
      *
      * @return true if AppcompatTextView is on the classpath
      */
-    static boolean canAddV7AppCompatViews() {
+    public static boolean canAddV7AppCompatViews() {
         if (sAppCompatViewCheck == null) {
             try {
                 Class.forName("android.support.v7.widget.AppCompatTextView");

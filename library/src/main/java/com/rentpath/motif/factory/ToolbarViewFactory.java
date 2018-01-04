@@ -1,4 +1,4 @@
-package com.rentpath.motif;
+package com.rentpath.motif.factory;
 
 import android.content.Context;
 import android.support.v7.widget.Toolbar;

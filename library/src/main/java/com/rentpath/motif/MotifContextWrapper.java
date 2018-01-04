@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.rentpath.motif.factory.MotifActivityFactory;
+
 public class MotifContextWrapper extends ContextWrapper {
 
     private MotifLayoutInflater mInflater;

@@ -1,8 +1,10 @@
-package com.rentpath.motif;
+package com.rentpath.motif.factory;
 
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+
+import com.rentpath.motif.utils.HasTypeface;
 
 class HasTypefaceViewFactory extends ViewFactory<HasTypeface> {
 

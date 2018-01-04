@@ -1,4 +1,4 @@
-package com.rentpath.motif;
+package com.rentpath.motif.factory;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -7,7 +7,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-abstract class ViewFactory<T> {
+import com.rentpath.motif.MotifConfig;
+import com.rentpath.motif.utils.MotifUtils;
+import com.rentpath.motif.utils.TypefaceUtils;
+
+public abstract class ViewFactory<T> {
 
     protected static final String ACTION_BAR_TITLE = "action_bar_title";
     protected static final String ACTION_BAR_SUBTITLE = "action_bar_subtitle";
