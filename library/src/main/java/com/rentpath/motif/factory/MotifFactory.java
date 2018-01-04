@@ -56,10 +56,10 @@ public class MotifFactory implements ViewGroup.OnHierarchyChangeListener {
             if (getConfig().getOverridingViewFactory() != null) {
                 getConfig().getOverridingViewFactory().onViewCreated(this, context, view, attrs);
             } else {
-                if (getConfig().hasCustomViewFactoryRegisteredForClass(view.getClass())) {
-                    getConfig().getCustomViewFactoryForClass(view.getClass()).onViewCreated(this, context, view, attrs);
-                } else if (getConfig().hasCustomViewFactoryRegisteredForId(view.getId())) {
+                if (getConfig().hasCustomViewFactoryRegisteredForId(view.getId())) {
                     getConfig().getCustomViewFactoryForId(view.getId()).onViewCreated(this, context, view, attrs);
+                } else if (getConfig().hasCustomViewFactoryRegisteredForClass(view.getClass())) {
+                    getConfig().getCustomViewFactoryForClass(view.getClass()).onViewCreated(this, context, view, attrs);
                 } else if (!getConfig().isDisableInternalViewFactoryTheming()) {
                     onViewCreatedInternal(view, context, attrs);
                 }
