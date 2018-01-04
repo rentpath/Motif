@@ -100,7 +100,22 @@ public class MotifConfig {
     /**
      * The custom view factory to handle view theme customization
      */
-    private ViewFactory<View> mViewFactory;
+    private ViewFactory<View> mOverridingViewFactory;
+    /**
+     * Any custom view factory implementations to listen for. These will be used when a view is inflated
+     * that is the same class of a view factory registered to the config
+     */
+    private Map<Class, ViewFactory<View>> mCustomClassViewFactories = new HashMap<>();
+    /**
+     * Any custom view factory implementations to listen for based on resource id. These will be used when a view is inflated
+     * that has the same id of of a factory registered with the resource id
+     */
+    private Map<Integer, ViewFactory<View>> mCustomIdViewFactories = new HashMap<>();
+    /**
+     * Disables any internal theming with internal view factories. If you wish to specify your own view factories and want to
+     * have Motif completely ignore any internal theming, set this to TRUE
+     */
+    private boolean mDisableInternalViewFactoryTheming;
     /**
      * Use Reflection to inject the private factory.
      */
@@ -119,7 +134,10 @@ public class MotifConfig {
         mColorPrimaryDark = builder.colorPrimaryDark;
         mColorAccent = builder.colorAccent;
         mColorControlHighlight = builder.colorControlHighlight;
-        mViewFactory = builder.viewFactory;
+        mOverridingViewFactory = builder.overridingViewFactory;
+        mCustomClassViewFactories = builder.customClassViewFactories;
+        mCustomIdViewFactories = builder.customIdViewFactories;
+        mDisableInternalViewFactoryTheming = builder.disableInternalViewFactoryTheming;
         mReflection = builder.reflection;
         mCustomViewCreation = builder.customViewCreation;
         final Map<Class<? extends View>, Integer> tempMap = new HashMap<>(DEFAULT_STYLES);
@@ -159,12 +177,32 @@ public class MotifConfig {
         this.mColorControlHighlight = colorControlHighlight;
     }
 
-    public ViewFactory<View> getViewFactory() {
-        return mViewFactory;
+    public ViewFactory<View> getOverridingViewFactory() {
+        return mOverridingViewFactory;
     }
 
-    public void setViewFactory(ViewFactory<View> viewFactory) {
-        this.mViewFactory = viewFactory;
+    public void setOverridingViewFactory(ViewFactory<View> viewFactory) {
+        this.mOverridingViewFactory = viewFactory;
+    }
+
+    public boolean hasCustomViewFactoryRegisteredForClass(Class clazz) {
+        return mCustomClassViewFactories.containsKey(clazz);
+    }
+
+    public ViewFactory<View> getCustomViewFactoryForClass(Class clazz) {
+        return mCustomClassViewFactories.get(clazz);
+    }
+
+    public boolean hasCustomViewFactoryRegisteredForId(int resourceId) {
+        return mCustomIdViewFactories.containsKey(resourceId);
+    }
+
+    public ViewFactory<View> getCustomViewFactoryForId(int resourceId) {
+        return mCustomIdViewFactories.get(resourceId);
+    }
+
+    public boolean isDisableInternalViewFactoryTheming() {
+        return mDisableInternalViewFactoryTheming;
     }
 
     public boolean isReflection() {
@@ -203,7 +241,19 @@ public class MotifConfig {
         /**'
          *
          */
-        private ViewFactory<View> viewFactory;
+        private ViewFactory<View> overridingViewFactory;
+        /**
+         *
+         */
+        private Map<Class, ViewFactory<View>> customClassViewFactories = new HashMap<>();
+        /**
+         *
+         */
+        private Map<Integer, ViewFactory<View>> customIdViewFactories = new HashMap<>();
+        /**
+         *
+         */
+        private boolean disableInternalViewFactoryTheming;
         /**
          * Use Reflection to inject the private factory. Doesn't exist pre HC. so defaults to false.
          */
@@ -312,11 +362,44 @@ public class MotifConfig {
         /**
          * Define your own custom view factory to replace the internal factories. Doing so will prevent any internal customization.
          *
-         * @param viewFactory the view factory to be used when inflating views.
+         * @param overridingViewFactory the view factory to be used when inflating views.
          * @return this builder
          */
-        public Builder setViewFactory(ViewFactory<View> viewFactory) {
-            this.viewFactory = viewFactory;
+        public Builder setOverridingViewFactory(ViewFactory<View> overridingViewFactory) {
+            this.overridingViewFactory = overridingViewFactory;
+            return this;
+        }
+
+        /**
+         *
+         * @param clazz The class to look for when inflating views
+         * @param viewFactory The view factory that should be called when the corresponding class is inflated
+         * @return this builder
+         */
+        public Builder addCustomViewFactoryForClass(Class clazz, ViewFactory<View> viewFactory) {
+            customClassViewFactories.put(clazz, viewFactory);
+            return this;
+        }
+
+        /**
+         *
+         * @param resourceId The resource id to look for when inflating views
+         * @param viewFactory The view factory that should be called when the corresponding resource id is inflated
+         * @return this builder
+         */
+        public Builder addCustomViewFactoryForId(int resourceId, ViewFactory<View> viewFactory) {
+            customIdViewFactories.put(resourceId, viewFactory);
+            return this;
+        }
+
+        /**
+         * Disables any internal theming with internal view factories. Set to TRUE to speed up performance
+         *
+         * @param disableInternalViewFactoryTheming Boolean to turn on/off internal Motif theming
+         * @return this builder
+         */
+        public Builder setDisableInternalViewFactoryTheming(boolean disableInternalViewFactoryTheming) {
+            this.disableInternalViewFactoryTheming = disableInternalViewFactoryTheming;
             return this;
         }
 

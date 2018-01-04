@@ -42,9 +42,9 @@ public class MotifFactory implements ViewGroup.OnHierarchyChangeListener {
     }
 
     /**
-     * Handle the created view
-     * If the config has a view factory, we will use this to handle view creation. Our internal
-     * code will not be executed if this view factory exists
+     * Handle the created view. If the config has an overriding view factory, or has a custom view factory registered for a
+     * specific view type, we will use this to handle view creation. Our internal code will not be executed if this view
+     * factory exists. If you have disabled internal theming, internal view factories will NOT be called.
      *
      * @param view    nullable.
      * @param context shouldn't be null.
@@ -53,10 +53,16 @@ public class MotifFactory implements ViewGroup.OnHierarchyChangeListener {
      */
     public View onViewCreated(View view, Context context, AttributeSet attrs) {
         if (view != null && view.getTag(R.id.motif_tag_id) != Boolean.TRUE) {
-            if (getConfig().getViewFactory() != null) {
-                getConfig().getViewFactory().onViewCreated(this, context, view, attrs);
+            if (getConfig().getOverridingViewFactory() != null) {
+                getConfig().getOverridingViewFactory().onViewCreated(this, context, view, attrs);
             } else {
-                onViewCreatedInternal(view, context, attrs);
+                if (getConfig().hasCustomViewFactoryRegisteredForClass(view.getClass())) {
+                    getConfig().getCustomViewFactoryForClass(view.getClass()).onViewCreated(this, context, view, attrs);
+                } else if (getConfig().hasCustomViewFactoryRegisteredForId(view.getId())) {
+                    getConfig().getCustomViewFactoryForId(view.getId()).onViewCreated(this, context, view, attrs);
+                } else if (!getConfig().isDisableInternalViewFactoryTheming()) {
+                    onViewCreatedInternal(view, context, attrs);
+                }
             }
             view.setTag(R.id.motif_tag_id, Boolean.TRUE);
         }
