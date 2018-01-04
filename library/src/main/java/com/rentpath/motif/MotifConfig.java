@@ -65,7 +65,7 @@ public class MotifConfig {
     private static MotifConfig sInstance;
 
     /**
-     * Set the default Calligraphy Config
+     * Set the default Motif Config
      *
      * @param motifConfig the config build using the builder.
      * @see MotifConfig.Builder
@@ -75,7 +75,7 @@ public class MotifConfig {
     }
 
     /**
-     * The current Calligraphy Config.
+     * The current Motif Config.
      * If not set it will create a default config.
      */
     public static MotifConfig get() {
@@ -305,7 +305,7 @@ public class MotifConfig {
          * {@literal @}Override
          * {@literal @}TargetApi(Build.VERSION_CODES.HONEYCOMB)
          * public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-         *   return CalligraphyContextWrapper.onActivityCreateView(this, parent, super.onCreateView(parent, name, context, attrs), name, context, attrs);
+         *   return MotifContextWrapper.onActivityCreateView(this, parent, super.onCreateView(parent, name, context, attrs), name, context, attrs);
          * }
          * </code></pre>
          */
@@ -334,7 +334,7 @@ public class MotifConfig {
          * (Without having to do proxy classes etc).
          *
          * Calling this will of course speed up inflation by turning off reflection, but not by much,
-         * But if you want Calligraphy to inject the correct typeface then you will need to make sure your CustomView's
+         * But if you want Motif to inject the correct typeface then you will need to make sure your CustomView's
          * are created before reaching the LayoutInflater onViewCreated.
          */
         public Builder disableCustomViewInflation() {
@@ -346,7 +346,7 @@ public class MotifConfig {
          * Add a custom style to get looked up. If you use a custom class that has a parent style
          * which is not part of the default android styles you will need to add it here.
          *
-         * The Calligraphy inflater is unaware of custom styles in your custom classes. We use
+         * The Motif inflater is unaware of custom styles in your custom classes. We use
          * the class type to look up the style attribute in the theme resources.
          *
          * So if you had a {@code MyTextField.class} which looked up it's default style as

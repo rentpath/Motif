@@ -36,8 +36,8 @@ public abstract class ViewFactory<T> {
         }
         if (styleIds[0] == -1) {
             // Use TextAppearance as default style
-            styleIds[0] = MotifConfig.get().getClassStyles().containsKey(view.getClass())
-                    ? MotifConfig.get().getClassStyles().get(view.getClass())
+            styleIds[0] = getConfig().getClassStyles().containsKey(view.getClass())
+                    ? getConfig().getClassStyles().get(view.getClass())
                     : android.R.attr.textAppearance;
         }
         return styleIds;
@@ -112,11 +112,15 @@ public abstract class ViewFactory<T> {
 
     protected Typeface getDefaultTypeface(Context context, String fontPath) {
         if (TextUtils.isEmpty(fontPath)) {
-            fontPath = MotifConfig.get().getFontPath();
+            fontPath = getConfig().getFontPath();
         }
         if (!TextUtils.isEmpty(fontPath)) {
             return TypefaceUtils.load(context.getAssets(), fontPath);
         }
         return null;
+    }
+
+    protected static MotifConfig getConfig() {
+        return MotifConfig.get();
     }
 }

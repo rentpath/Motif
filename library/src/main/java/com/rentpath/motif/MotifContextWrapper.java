@@ -40,7 +40,7 @@ public class MotifContextWrapper extends ContextWrapper {
      * <pre>
      * {@code
      * public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-     *   return CalligraphyContextWrapper.onActivityCreateView(this, parent, super.onCreateView(parent, name, context, attrs), name, context, attrs);
+     *   return MotifContextWrapper.onActivityCreateView(this, parent, super.onCreateView(parent, name, context, attrs), name, context, attrs);
      * }
      * }
      * </pre>
@@ -58,14 +58,14 @@ public class MotifContextWrapper extends ContextWrapper {
     }
 
     /**
-     * Get the Calligraphy Activity Fragment Instance to allow callbacks for when views are created.
+     * Get the Motif Activity Fragment Instance to allow callbacks for when views are created.
      *
      * @param activity The activity the original that the ContextWrapper was attached too.
      * @return Interface allowing you to call onActivityViewCreated
      */
     static MotifActivityFactory get(Activity activity) {
         if (!(activity.getLayoutInflater() instanceof MotifLayoutInflater)) {
-            throw new RuntimeException("This activity does not wrap the Base Context! See CalligraphyContextWrapper.wrap(Context)");
+            throw new RuntimeException("This activity does not wrap the Base Context! See MotifContextWrapper.wrap(Context)");
         }
         return (MotifActivityFactory) activity.getLayoutInflater();
     }

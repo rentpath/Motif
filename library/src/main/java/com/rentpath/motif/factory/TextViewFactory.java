@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.rentpath.motif.MotifConfig;
 import com.rentpath.motif.utils.MotifUtils;
 import com.rentpath.motif.utils.TypefaceUtils;
 
@@ -37,7 +36,7 @@ class TextViewFactory extends ViewFactory<TextView> {
         // Still need to defer the Native action bar, appcompat-v7:21+ uses the Toolbar underneath. But won't match these anyway.
         final boolean deferred = matchesResourceIdName(view, ACTION_BAR_TITLE) || matchesResourceIdName(view, ACTION_BAR_SUBTITLE);
 
-        MotifUtils.applyFontToTextView(context, view, MotifConfig.get(), textViewFont, deferred);
+        MotifUtils.applyFontToTextView(context, view, getConfig(), textViewFont, deferred);
     }
 
 }

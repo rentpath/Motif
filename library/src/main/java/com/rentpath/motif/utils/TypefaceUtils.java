@@ -37,7 +37,7 @@ public final class TypefaceUtils {
                     return typeface;
                 }
             } catch (Exception e) {
-                Log.w("Calligraphy", "Can't create asset from " + filePath + ". Make sure you have passed in the correct path and file name.", e);
+                Log.w("Motif", "Can't create asset from " + filePath + ". Make sure you have passed in the correct path and file name.", e);
                 sCachedFonts.put(filePath, null);
                 return null;
             }

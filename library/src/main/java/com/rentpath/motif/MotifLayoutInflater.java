@@ -100,7 +100,7 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
         // Already tried to set the factory.
         if (mSetPrivateFactory) return;
         // Reflection (Or Old Device) skip.
-        if (!MotifConfig.get().isReflection()) return;
+        if (!getConfig().isReflection()) return;
         // Skip if not attached to an activity.
         if (!(getContext() instanceof Factory2)) {
             mSetPrivateFactory = true;
@@ -168,7 +168,7 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
     /**
      * Nasty method to inflate custom layouts that haven't been handled else where. If this fails it
      * will fall back through to the PhoneLayoutInflater method of inflating custom views where
-     * Calligraphy will NOT have a hook into.
+     * Motif will NOT have a hook into.
      *
      * @param parent      parent view
      * @param view        view if it has been inflated by this point, if this is not null this method
@@ -188,7 +188,7 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
         // significant difference to performance on Android 4.0+.
 
         // If CustomViewCreation is off skip this.
-        if (!MotifConfig.get().isCustomViewCreation()) return view;
+        if (!getConfig().isCustomViewCreation()) return view;
         if (view == null && name.indexOf('.') > -1) {
             if (mConstructorArgs == null)
                 mConstructorArgs = ReflectionUtils.getField(LayoutInflater.class, "mConstructorArgs");
@@ -274,8 +274,8 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
 
         private final MotifLayoutInflater mInflater;
 
-        public PrivateWrapperFactory2(Factory2 factory2, MotifLayoutInflater inflater, MotifFactory calligraphyFactory) {
-            super(factory2, calligraphyFactory);
+        public PrivateWrapperFactory2(Factory2 factory2, MotifLayoutInflater inflater, MotifFactory motifFactory) {
+            super(factory2, motifFactory);
             mInflater = inflater;
         }
 
@@ -291,4 +291,7 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
         }
     }
 
+    private MotifConfig getConfig() {
+        return MotifConfig.get();
+    }
 }

@@ -5,13 +5,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewParent;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.rentpath.motif.MotifConfig;
 import com.rentpath.motif.R;
-import com.rentpath.motif.utils.HasTypeface;
-import com.rentpath.motif.utils.MotifUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +25,15 @@ public class MotifFactory {
     private static final Map<Class, ViewFactory> FACTORIES = new HashMap<>();
 
     static {
+        FACTORIES.put(Button.class, new ButtonFactory());
+        FACTORIES.put(CheckBox.class, new CheckBoxFactory());
+        FACTORIES.put(ImageButton.class, new ImageButtonFactory());
+        FACTORIES.put(ImageView.class, new ImageViewFactory());
+        FACTORIES.put(RadioButton.class, new RadioButtonFactory());
         FACTORIES.put(TextView.class, new TextViewFactory());
         FACTORIES.put(Toolbar.class, new ToolbarViewFactory());
-        FACTORIES.put(ViewParent.class, new ViewParentFactory());
-        FACTORIES.put(HasTypeface.class, new HasTypefaceViewFactory());
+        FACTORIES.put(View.class, new StandardViewFactory());
+        FACTORIES.put(ViewGroup.class, new ViewGroupFactory());
     }
 
     private final int[] mAttributeId;
@@ -53,40 +61,54 @@ public class MotifFactory {
     }
 
     private void onViewCreatedInternal(View view, final Context context, AttributeSet attrs) {
-        ViewFactory viewFactory;
 
+        // first check if this view is a custom view defined in our config
+        if (getConfig().isCustomViewTypefaceSupport() && getConfig().isCustomViewHasTypeface(view)) {
+            mCustomViewFactory.onViewCreated(this, context, view, attrs, mAttributeId);
+        }
+
+        ViewFactory viewFactory;
         try {
             viewFactory = FACTORIES.get(view.getClass());
         } catch (Throwable t) {
-            if (MotifConfig.get().isCustomViewTypefaceSupport() && MotifConfig.get().isCustomViewHasTypeface(view)) {
-                mCustomViewFactory.onViewCreated(this, context, view, attrs, mAttributeId);
-            } else {
-                logViewClassError(view.getClass());
-            }
+            logViewClassError(view.getClass());
             return;
         }
 
-        if (view instanceof TextView) {
+        if (view instanceof Button && viewFactory instanceof ButtonFactory) {
+            ((ButtonFactory) viewFactory).onViewCreated(this, context, (Button) view, attrs, mAttributeId);
+        }
+
+        if (view instanceof CheckBox && viewFactory instanceof CheckBoxFactory) {
+            ((CheckBoxFactory) viewFactory).onViewCreated(this, context, (CheckBox) view, attrs, mAttributeId);
+        }
+
+        if (view instanceof ImageButton && viewFactory instanceof ImageButtonFactory) {
+            ((ImageButtonFactory) viewFactory).onViewCreated(this, context, (ImageButton) view, attrs, mAttributeId);
+        }
+
+        if (view instanceof ImageView && viewFactory instanceof ImageViewFactory) {
+            ((ImageViewFactory) viewFactory).onViewCreated(this, context, (ImageView) view, attrs, mAttributeId);
+        }
+
+        if (view instanceof RadioButton && viewFactory instanceof RadioButtonFactory) {
+            ((RadioButtonFactory) viewFactory).onViewCreated(this, context, (RadioButton) view, attrs, mAttributeId);
+        }
+
+        if (view instanceof TextView && viewFactory instanceof TextViewFactory) {
             ((TextViewFactory) viewFactory).onViewCreated(this, context, (TextView) view, attrs, mAttributeId);
         }
 
-        if (view instanceof ViewParent && viewFactory instanceof ViewParentFactory) {
-            ((ViewParentFactory) viewFactory).onViewCreated(this, context, (ViewParent) view, attrs, mAttributeId);
-        }
-
-        // AppCompat API21+ The ActionBar doesn't inflate default Title/SubTitle, we need to scan the
-        // Toolbar(Which underlies the ActionBar) for its children.
-        if (MotifUtils.canCheckForV7Toolbar() && view instanceof android.support.v7.widget.Toolbar && viewFactory instanceof ToolbarViewFactory) {
-            ((ToolbarViewFactory) viewFactory).onViewCreated(this, context, (Toolbar) view, attrs, mAttributeId);
-        }
-
-        // Try to set typeface for custom views using interface method or via reflection if available
-        if (view instanceof HasTypeface && viewFactory instanceof HasTypefaceViewFactory) {
-            ((HasTypefaceViewFactory) viewFactory).onViewCreated(this, context, (HasTypeface) view, attrs, mAttributeId);
+        if (view instanceof ViewGroup && viewFactory instanceof ViewGroupFactory) {
+            ((ViewGroupFactory) viewFactory).onViewCreated(this, context, (ViewGroup) view, attrs, mAttributeId);
         }
     }
 
     private void logViewClassError(Class clazz) {
         Log.e(TAG, "Unable to apply theme to view of type " + clazz);
+    }
+
+    private MotifConfig getConfig() {
+        return MotifConfig.get();
     }
 }
