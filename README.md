@@ -7,23 +7,25 @@ Motif - mōˈtēf/ - a decorative design or pattern.
 
 #### Initialize Config
 
-Define your default font using `MotifConfig`, in your `Application` class in the `#onCreate()` method.
+Define your default theme colors using `MotifConfig`, in your `Application` class in the `#onCreate()` method.
 
 ```java
 @Override
 public void onCreate() {
     super.onCreate();
     MotifConfig.initDefault(new MotifConfig.Builder()
-                            .setDefaultFontPath("fonts/Roboto-RobotoRegular.ttf")
-                            .setFontAttrId(R.attr.fontPath)
+                            .setColorPrimary("#444444")
+                            .setColorPrimaryDark("#000000")
+                            .setColorAccent("#FF4141")
+                            .setColorControlHighlight("#949494")
                             .build()
             );
     //....
 }
 ```
 
-_Note: You don't need to define `MotifConfig` but the library will apply
-no default font and use the default attribute of `R.attr.fontPath`._
+Note: You don't need to define `MotifConfig` but the library will apply
+the default theme specified in your styles.xml.
 
 #### Inject into Context
 
@@ -34,6 +36,12 @@ Wrap the `Activity` Context:
 protected void attachBaseContext(Context newBase) {
     super.attachBaseContext(MotifContextWrapper.wrap(newBase));
 }
+```
+
+Or if you need to reference a LayoutInflater, use the MotifLayoutInflater:
+
+```java
+MotifLayoutInflater.from(Context).inflate(...);
 ```
 
 _You're good to go!_

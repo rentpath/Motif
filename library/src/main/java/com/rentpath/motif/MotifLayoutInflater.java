@@ -27,6 +27,10 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
     private boolean mSetPrivateFactory = false;
     private Field mConstructorArgs = null;
 
+    public static MotifLayoutInflater from(Context context) {
+        return new MotifLayoutInflater(context);
+    }
+
     protected MotifLayoutInflater(Context context) {
         super(context);
         mMotifFactory = new MotifFactory();
