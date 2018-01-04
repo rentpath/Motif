@@ -16,10 +16,12 @@ import android.widget.TextView;
 import com.rentpath.motif.MotifConfig;
 import com.rentpath.motif.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class MotifFactory {
+public class MotifFactory implements ViewGroup.OnHierarchyChangeListener {
 
     private static final String TAG = "Motif";
     private static final Map<Class, ViewFactory> FACTORIES = new HashMap<>();
@@ -71,13 +73,53 @@ public class MotifFactory {
             ((TextViewFactory) FACTORIES.get(TextView.class)).onViewCreated(this, context, (TextView) view, attrs);
         } else if (view instanceof ViewGroup) {
             ((ViewGroupFactory) FACTORIES.get(ViewGroup.class)).onViewCreated(this, context, (ViewGroup) view, attrs);
+
+            // add our hierarchy listener to detect view additions and apply themes
+            ((ViewGroup) view).setOnHierarchyChangeListener(this);
         } else {
             logViewClassError(view.getClass());
         }
     }
 
+    /**
+     * Called when a view is added to a view group. This checks the child type and if a view group is added, we ensure we
+     * catch all children of that view group so proper theming can be applied
+     *
+     * @param parent Parent view the child is added to
+     * @param child Child view being added
+     */
+    @Override
+    public void onChildViewAdded(View parent, View child) {
+        if (child instanceof ViewGroup) {
+            List<View> nestedChildren = getChildrenFromViewGroup((ViewGroup) child);
+            for (View nestedChild : nestedChildren) {
+                onChildViewAdded(child, nestedChild);
+            }
+        } else {
+            onViewCreatedInternal(child, parent.getContext(), null);
+        }
+    }
+
+    /**
+     * Ignored
+     *
+     * @param parent Parent view the child is removed from
+     * @param child Child view being removed
+     */
+    @Override
+    public void onChildViewRemoved(View parent, View child) {
+    }
+
     private void logViewClassError(Class clazz) {
         Log.e(TAG, "Unable to apply theme to view of type " + clazz);
+    }
+
+    private List<View> getChildrenFromViewGroup(ViewGroup viewGroup) {
+        List<View> children = new ArrayList<>();
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            children.add(viewGroup.getChildAt(i));
+        }
+        return children;
     }
 
     private MotifConfig getConfig() {

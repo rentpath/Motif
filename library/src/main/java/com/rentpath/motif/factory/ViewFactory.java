@@ -8,9 +8,6 @@ import com.rentpath.motif.MotifConfig;
 
 public abstract class ViewFactory<T> {
 
-    protected static final String ACTION_BAR_TITLE = "action_bar_title";
-    protected static final String ACTION_BAR_SUBTITLE = "action_bar_subtitle";
-
     abstract void onViewCreated(MotifFactory motifFactory, Context context, T view, AttributeSet attrs);
 
     /**
