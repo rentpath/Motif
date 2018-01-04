@@ -57,41 +57,22 @@ public class MotifFactory {
     }
 
     private void onViewCreatedInternal(View view, final Context context, AttributeSet attrs) {
-
-        ViewFactory viewFactory;
-        try {
-            viewFactory = FACTORIES.get(view.getClass());
-        } catch (Throwable t) {
+        if (view instanceof CheckBox) {
+            ((CheckBoxFactory) FACTORIES.get(CheckBox.class)).onViewCreated(this, context, (CheckBox) view, attrs);
+        } else if (view instanceof RadioButton) {
+            ((RadioButtonFactory) FACTORIES.get(RadioButton.class)).onViewCreated(this, context, (RadioButton) view, attrs);
+        } else if (view instanceof Button) {
+            ((ButtonFactory) FACTORIES.get(Button.class)).onViewCreated(this, context, (Button) view, attrs);
+        } else if (view instanceof ImageButton) {
+            ((ImageButtonFactory) FACTORIES.get(ImageButton.class)).onViewCreated(this, context, (ImageButton) view, attrs);
+        } else if (view instanceof ImageView) {
+            ((ImageViewFactory) FACTORIES.get(ImageView.class)).onViewCreated(this, context, (ImageView) view, attrs);
+        } else if (view instanceof TextView) {
+            ((TextViewFactory) FACTORIES.get(TextView.class)).onViewCreated(this, context, (TextView) view, attrs);
+        } else if (view instanceof ViewGroup) {
+            ((ViewGroupFactory) FACTORIES.get(ViewGroup.class)).onViewCreated(this, context, (ViewGroup) view, attrs);
+        } else {
             logViewClassError(view.getClass());
-            return;
-        }
-
-        if (view instanceof Button && viewFactory instanceof ButtonFactory) {
-            ((ButtonFactory) viewFactory).onViewCreated(this, context, (Button) view, attrs);
-        }
-
-        if (view instanceof CheckBox && viewFactory instanceof CheckBoxFactory) {
-            ((CheckBoxFactory) viewFactory).onViewCreated(this, context, (CheckBox) view, attrs);
-        }
-
-        if (view instanceof ImageButton && viewFactory instanceof ImageButtonFactory) {
-            ((ImageButtonFactory) viewFactory).onViewCreated(this, context, (ImageButton) view, attrs);
-        }
-
-        if (view instanceof ImageView && viewFactory instanceof ImageViewFactory) {
-            ((ImageViewFactory) viewFactory).onViewCreated(this, context, (ImageView) view, attrs);
-        }
-
-        if (view instanceof RadioButton && viewFactory instanceof RadioButtonFactory) {
-            ((RadioButtonFactory) viewFactory).onViewCreated(this, context, (RadioButton) view, attrs);
-        }
-
-        if (view instanceof TextView && viewFactory instanceof TextViewFactory) {
-            ((TextViewFactory) viewFactory).onViewCreated(this, context, (TextView) view, attrs);
-        }
-
-        if (view instanceof ViewGroup && viewFactory instanceof ViewGroupFactory) {
-            ((ViewGroupFactory) viewFactory).onViewCreated(this, context, (ViewGroup) view, attrs);
         }
     }
 

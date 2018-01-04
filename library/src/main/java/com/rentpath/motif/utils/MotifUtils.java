@@ -1,5 +1,7 @@
 package com.rentpath.motif.utils;
 
+import android.os.Build;
+
 public class MotifUtils {
 
     private static Boolean sToolbarCheck = null;
@@ -37,6 +39,15 @@ public class MotifUtils {
             }
         }
         return sAppCompatViewCheck;
+    }
+
+    /**
+     * Checks to see if we are running lollipop or greater
+     *
+     * @return true if version is at least lollipop
+     */
+    public static boolean isLollipop() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     private MotifUtils() {
