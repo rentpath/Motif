@@ -16,8 +16,10 @@ import android.widget.ToggleButton;
 import com.rentpath.motif.factory.ViewFactory;
 import com.rentpath.motif.utils.MotifUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MotifConfig {
@@ -110,7 +112,7 @@ public class MotifConfig {
      * Any custom view factory implementations to listen for based on resource id. These will be used when a view is inflated
      * that has the same id of of a factory registered with the resource id
      */
-    private Map<Integer, ViewFactory<View>> mCustomIdViewFactories = new HashMap<>();
+    private Map<List<Integer>, ViewFactory<View>> mCustomIdViewFactories = new HashMap<>();
     /**
      * Disables any internal theming with internal view factories. If you wish to specify your own view factories and want to
      * have Motif completely ignore any internal theming, set this to TRUE
@@ -194,11 +196,21 @@ public class MotifConfig {
     }
 
     public boolean hasCustomViewFactoryRegisteredForId(int resourceId) {
-        return mCustomIdViewFactories.containsKey(resourceId);
+        for (List<Integer> ids : mCustomIdViewFactories.keySet()) {
+            if (ids.contains(resourceId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public ViewFactory<View> getCustomViewFactoryForId(int resourceId) {
-        return mCustomIdViewFactories.get(resourceId);
+        for (List<Integer> ids : mCustomIdViewFactories.keySet()) {
+            if (ids.contains(resourceId)) {
+                return mCustomIdViewFactories.get(ids);
+            }
+        }
+        return null;
     }
 
     public boolean isDisableInternalViewFactoryTheming() {
@@ -249,7 +261,7 @@ public class MotifConfig {
         /**
          *
          */
-        private Map<Integer, ViewFactory<View>> customIdViewFactories = new HashMap<>();
+        private Map<List<Integer>, ViewFactory<View>> customIdViewFactories = new HashMap<>();
         /**
          *
          */
@@ -388,7 +400,24 @@ public class MotifConfig {
          * @return this builder
          */
         public Builder addCustomViewFactoryForId(int resourceId, ViewFactory<View> viewFactory) {
-            customIdViewFactories.put(resourceId, viewFactory);
+            List<Integer> ids = new ArrayList<>();
+            ids.add(resourceId);
+            customIdViewFactories.put(ids, viewFactory);
+            return this;
+        }
+
+        /**
+         *
+         * @param resourceIds The resource ids to look for when inflating views
+         * @param viewFactory The view factory that should be called when the corresponding resource id is inflated
+         * @return this builder
+         */
+        public Builder addCustomViewFactoryForId(int[] resourceIds, ViewFactory<View> viewFactory) {
+            List<Integer> ids = new ArrayList<>();
+            for (int id : resourceIds) {
+                ids.add(id);
+            }
+            customIdViewFactories.put(ids, viewFactory);
             return this;
         }
 
