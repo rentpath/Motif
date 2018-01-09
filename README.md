@@ -24,6 +24,17 @@ public void onCreate() {
 }
 ```
 
+Register custom ViewFactories or override Motif's ViewFactories
+```java
+MotifConfig.initDefault(new MotifConfig.Builder()
+                            .setDisableInternalViewFactoryTheming(boolean) // disable Motif internal ViewFactories
+                            .addCustomViewFactoryForId(R.id.<your_view_id>, ViewFactory) // add your own ViewFactory for a specific view resource
+                            .addCustomViewFactoryForIds(new int[] {R.id.<your_view_id_1>, R.id.<your_view_id_2>, ...}, ViewFactory) // add your own ViewFactory for an array of view resources
+                            .addCustomViewFactoryForClass(Class, ViewFactory) // add your own ViewFactory for a specific view class being inflated
+                            .build()
+            );
+```
+
 Note: You don't need to define `MotifConfig` but the library will apply
 the default theme specified in your styles.xml.
 
