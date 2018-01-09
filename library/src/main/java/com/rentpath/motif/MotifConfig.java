@@ -412,7 +412,7 @@ public class MotifConfig {
          * @param viewFactory The view factory that should be called when the corresponding resource id is inflated
          * @return this builder
          */
-        public Builder addCustomViewFactoryForId(int[] resourceIds, ViewFactory<View> viewFactory) {
+        public Builder addCustomViewFactoryForIds(int[] resourceIds, ViewFactory<View> viewFactory) {
             List<Integer> ids = new ArrayList<>();
             for (int id : resourceIds) {
                 ids.add(id);
