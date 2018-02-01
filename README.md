@@ -1,8 +1,6 @@
 # Motif
 Motif - mōˈtēf/ - a decorative design or pattern.
 
-### Currently in development
-
 ### Usage
 
 #### Initialize Config
