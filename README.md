@@ -1,6 +1,8 @@
 # Motif
 Motif - mōˈtēf/ - a decorative design or pattern.
 
+Motif allows integrating applications to utilize the view inflation process to update specific view styles.
+
 ### Usage
 
 #### Initialize Config
@@ -69,7 +71,7 @@ dependencies {
 
 Note
 -------
-This library was created because it is currently not possible to dynamically change themes in Android. This short workaround allows integrating applications to utilize the view inflation process to update specific view styles.
+This library was created because it is currently not possible to dynamically change themes in Android.
 
 License
 -------
