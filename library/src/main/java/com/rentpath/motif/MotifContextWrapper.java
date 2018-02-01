@@ -32,7 +32,7 @@ public class MotifContextWrapper extends ContextWrapper {
      * {@link MotifConfig.Builder#disablePrivateFactoryInjection()}
      * This will need to be called from the
      * {@link android.app.Activity#onCreateView(android.view.View, String, android.content.Context, android.util.AttributeSet)}
-     * method to enable view font injection if the view is created inside the activity onCreateView.
+     * method to enable view  injection if the view is created inside the activity onCreateView.
      *
      * You would implement this method like so in you base activity.
      * <pre>

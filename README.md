@@ -7,36 +7,27 @@ Motif - mōˈtēf/ - a decorative design or pattern.
 
 #### Initialize Config
 
-Define your default theme colors using `MotifConfig`, in your `Application` class in the `#onCreate()` method.
+Define your default view factories using `MotifConfig`, in your `Application` class in the `#onCreate()` method.
 
-```java
-@Override
-public void onCreate() {
-    super.onCreate();
-    MotifConfig.initDefault(new MotifConfig.Builder()
-                            .setColorPrimary("#444444")
-                            .setColorPrimaryDark("#000000")
-                            .setColorAccent("#FF4141")
-                            .setColorControlHighlight("#949494")
-                            .build()
-            );
-    //....
-}
-```
-
-Register custom ViewFactories or override Motif's ViewFactories
 ```java
 MotifConfig.initDefault(new MotifConfig.Builder()
-                            .setDisableInternalViewFactoryTheming(boolean) // disable Motif internal ViewFactories
-                            .addCustomViewFactoryForId(R.id.<your_view_id>, ViewFactory) // add your own ViewFactory for a specific view resource
-                            .addCustomViewFactoryForIds(new int[] {R.id.<your_view_id_1>, R.id.<your_view_id_2>, ...}, ViewFactory) // add your own ViewFactory for an array of view resources
-                            .addCustomViewFactoryForClass(Class, ViewFactory) // add your own ViewFactory for a specific view class being inflated
+                            .registerViewFactoryForIds(new MyViewFactory(), R.id.<your_view_id_1>, R.id.<your_view_id_2>, ...) // add your own ViewFactory for an array of view resources
+                            .registerViewFactoryForClass(Class, new MyViewFactory()) // add your own ViewFactory for a specific view class being inflated
                             .build()
             );
 ```
 
-Note: You don't need to define `MotifConfig` but the library will apply
-the default theme specified in your styles.xml.
+ViewFactory
+
+```java
+public class MyViewFactory extends ViewFactory {
+
+    @Override
+    public void onViewCreated(MotifFactory motifFactory, Context context, View view, AttributeSet attrs) {
+        // apply custom styling to specific view class or view id
+    }
+}
+```
 
 #### Inject into Context
 
@@ -80,7 +71,7 @@ dependencies {
 
 Note
 -------
-This library was created because it is currently not possible to dynamically change themes in Android.
+This library was created because it is currently not possible to dynamically change themes in Android. This short workaround allows integrating applications to utilize the view inflation process to update specific view styles.
 
 License
 -------

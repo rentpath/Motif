@@ -6,9 +6,9 @@ import android.view.View;
 
 import com.rentpath.motif.MotifConfig;
 
-public abstract class ViewFactory<T> {
+public abstract class ViewFactory {
 
-    public abstract void onViewCreated(MotifFactory motifFactory, Context context, T view, AttributeSet attrs);
+    public abstract void onViewCreated(MotifFactory motifFactory, Context context, View view, AttributeSet attrs);
 
     /**
      * Use to match a view against a potential view id. Such as ActionBar title etc.

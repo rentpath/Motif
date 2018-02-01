@@ -1,13 +1,18 @@
 package com.rentpath.motif;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import com.rentpath.motif.factory.MotifActivityFactory;
 import com.rentpath.motif.factory.MotifFactory;
+import com.rentpath.motif.factory.StatusBarViewFactory;
 import com.rentpath.motif.utils.ReflectionUtils;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -16,6 +21,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class MotifLayoutInflater extends LayoutInflater implements MotifActivityFactory {
+
+    private static final String TAG = "MotifLayoutInflater";
 
     private static final String[] sClassPrefixList = {
             "android.widget.",
@@ -55,6 +62,22 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
 
     @Override
     public View inflate(XmlPullParser parser, ViewGroup root, boolean attachToRoot) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && getContext() instanceof Activity) {
+            MotifConfig config = MotifConfig.get();
+            Activity activity = (Activity) getContext();
+            Window window = activity.getWindow();
+            StatusBarViewFactory statusBarViewFactory = null;
+            if (config.hasRegisteredStatusBarViewFactoryRegisteredForActivityClass(activity.getClass())) {
+                statusBarViewFactory = config.getRegisteredStatusBarViewFactoryForActivityClass(activity.getClass());
+            } else if (config.getStatusBarViewFactory() != null) {
+                statusBarViewFactory = config.getStatusBarViewFactory();
+            }
+            if (statusBarViewFactory != null) {
+                window.addFlags(statusBarViewFactory.getWindowFlags());
+                window.setStatusBarColor(statusBarViewFactory.getStatusBarColor(activity));
+            }
+        }
+
         setPrivateFactoryInternal();
         return super.inflate(parser, root, attachToRoot);
     }
@@ -130,7 +153,12 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
      */
     @Override
     public View onActivityCreateView(View parent, View view, String name, Context context, AttributeSet attrs) {
-        return mMotifFactory.onViewCreated(createCustomViewInternal(parent, view, name, context, attrs), context, attrs);
+        AttributeSet newAttrs = attrs;
+        MotifConfig config = MotifConfig.get();
+        if (config.getAttributeSetConfig() != null) {
+            newAttrs = config.getAttributeSetConfig().getConfiguredAttributeSet(view, name, context, attrs);
+        }
+        return mMotifFactory.onViewCreated(createCustomViewInternal(parent, view, name, context, newAttrs), context, newAttrs);
     }
 
     /**
@@ -139,7 +167,16 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
      */
     @Override
     protected View onCreateView(View parent, String name, AttributeSet attrs) throws ClassNotFoundException {
-        return mMotifFactory.onViewCreated(super.onCreateView(parent, name, attrs),
+        AttributeSet newAttrs = attrs;
+        MotifConfig config = MotifConfig.get();
+        if (config.getAttributeSetConfig() != null) {
+            try {
+                newAttrs = config.getAttributeSetConfig().getConfiguredAttributeSet(null, name, getContext(), attrs);
+            } catch (Throwable t) {
+                Log.d(TAG, t.getMessage());
+            }
+        }
+        return mMotifFactory.onViewCreated(super.onCreateView(parent, name, newAttrs),
                 getContext(), attrs);
     }
 
@@ -150,20 +187,26 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
      */
     @Override
     protected View onCreateView(String name, AttributeSet attrs) throws ClassNotFoundException {
+        AttributeSet newAttrs = attrs;
+        MotifConfig config = MotifConfig.get();
+        if (config.getAttributeSetConfig() != null) {
+            newAttrs = config.getAttributeSetConfig().getConfiguredAttributeSet(null, name, getContext(), attrs);
+        }
+
         // This mimics the {@code PhoneLayoutInflater} in the way it tries to inflate the base
         // classes, if this fails its pretty certain the app will fail at this point.
         View view = null;
         for (String prefix : sClassPrefixList) {
             try {
-                view = createView(name, prefix, attrs);
+                view = createView(name, prefix, newAttrs);
             } catch (ClassNotFoundException ignored) {
             }
         }
         // In this case we want to let the base class take a crack
         // at it.
-        if (view == null) view = super.onCreateView(name, attrs);
+        if (view == null) view = super.onCreateView(name, newAttrs);
 
-        return mMotifFactory.onViewCreated(view, view.getContext(), attrs);
+        return mMotifFactory.onViewCreated(view, view.getContext(), newAttrs);
     }
 
     /**
@@ -188,8 +231,6 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
         // We also maintain the Field reference and make it accessible which will make a pretty
         // significant difference to performance on Android 4.0+.
 
-        // If CustomViewCreation is off skip this.
-        if (!getConfig().isCustomViewCreation()) return view;
         if (view == null && name.indexOf('.') > -1) {
             if (mConstructorArgs == null)
                 mConstructorArgs = ReflectionUtils.getField(LayoutInflater.class, "mConstructorArgs");
@@ -233,9 +274,15 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
 
         @Override
         public View onCreateView(String name, Context context, AttributeSet attrs) {
+            AttributeSet newAttrs = attrs;
+            MotifConfig config = MotifConfig.get();
+            if (config.getAttributeSetConfig() != null) {
+                newAttrs = config.getAttributeSetConfig().getConfiguredAttributeSet(null, name, context, attrs);
+            }
+
             return mMotifFactory.onViewCreated(
-                    mFactory.onCreateView(name, context, attrs),
-                    context, attrs
+                    mFactory.onCreateView(name, context, newAttrs),
+                    context, newAttrs
             );
         }
     }
@@ -254,16 +301,28 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
 
         @Override
         public View onCreateView(String name, Context context, AttributeSet attrs) {
+            AttributeSet newAttrs = attrs;
+            MotifConfig config = MotifConfig.get();
+            if (config.getAttributeSetConfig() != null) {
+                newAttrs = config.getAttributeSetConfig().getConfiguredAttributeSet(null, name, context, attrs);
+            }
+
             return mMotifFactory.onViewCreated(
-                    mFactory2.onCreateView(name, context, attrs),
-                    context, attrs);
+                    mFactory2.onCreateView(name, context, newAttrs),
+                    context, newAttrs);
         }
 
         @Override
         public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+            AttributeSet newAttrs = attrs;
+            MotifConfig config = MotifConfig.get();
+            if (config.getAttributeSetConfig() != null) {
+                newAttrs = config.getAttributeSetConfig().getConfiguredAttributeSet(null, name, context, attrs);
+            }
+
             return mMotifFactory.onViewCreated(
-                    mFactory2.onCreateView(parent, name, context, attrs),
-                    context, attrs);
+                    mFactory2.onCreateView(parent, name, context, newAttrs),
+                    context, newAttrs);
         }
     }
 
@@ -282,12 +341,18 @@ public class MotifLayoutInflater extends LayoutInflater implements MotifActivity
 
         @Override
         public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+            AttributeSet newAttrs = attrs;
+            MotifConfig config = MotifConfig.get();
+            if (config.getAttributeSetConfig() != null) {
+                newAttrs = config.getAttributeSetConfig().getConfiguredAttributeSet(null, name, context, attrs);
+            }
+
             return mMotifFactory.onViewCreated(
                     mInflater.createCustomViewInternal(parent,
-                            mFactory2.onCreateView(parent, name, context, attrs),
-                            name, context, attrs
+                            mFactory2.onCreateView(parent, name, context, newAttrs),
+                            name, context, newAttrs
                     ),
-                    context, attrs
+                    context, newAttrs
             );
         }
     }
