@@ -4,15 +4,15 @@ apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.rentpath'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
     }
 
@@ -26,10 +26,10 @@ android {
 }
 
 dependencies {
-    api 'com.android.support:appcompat-v7:26.1.0'
-    api 'com.android.support:support-v13:26.1.0'
-    api 'com.android.support:cardview-v7:26.1.0'
-    api 'com.android.support:design:26.1.0'
+    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'androidx.legacy:legacy-support-v13:1.0.0'
+    api 'androidx.cardview:cardview:1.0.0'
+    api 'com.google.android.material:material:1.0.0'
 }
 
 task sourcesJar(type: Jar) {

@@ -2,7 +2,7 @@ package com.rentpath.motif.factory;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.view.WindowManager;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

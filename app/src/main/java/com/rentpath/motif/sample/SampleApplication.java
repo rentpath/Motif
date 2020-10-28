@@ -1,7 +1,7 @@
 package com.rentpath.motif.sample;
 
 import android.app.Application;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.rentpath.motif.MotifConfig;
 
